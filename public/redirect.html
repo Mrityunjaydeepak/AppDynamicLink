@@ -1,0 +1,37 @@
+<!-- public/redirect.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open App</title>
+  <script>
+    window.onload = function() {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var isiOS = /iphone|ipad|ipod/i.test(userAgent);
+      var isAndroid = /android/i.test(userAgent);
+
+      if (isiOS) {
+        // Attempt to open the app using the custom URL scheme
+        window.location = 'yourapp://';
+        // If the app is not installed, redirect to the App Store after a delay
+        setTimeout(function() {
+          window.location = 'https://apps.apple.com/app/idYOUR_APP_ID';
+        }, 2000);
+      } else if (isAndroid) {
+        // Attempt to open the app using the intent URL
+        window.location = 'intent://#Intent;scheme=yourapp;package=com.copartner.app;end';
+        // If the app is not installed, redirect to the Play Store after a delay
+        setTimeout(function() {
+          window.location = 'https://play.google.com/store/apps/details?id=com.copartner.app';
+        }, 2000);
+      } else {
+        // For other devices, redirect to your website
+        window.location = 'https://copartner.in';
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
