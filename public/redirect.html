@@ -6,27 +6,41 @@
   <title>Open App</title>
   <script>
     window.onload = function() {
+      // Function to get query parameters from URL
+      function getQueryParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const vars = queryString.split('&');
+        for (let i = 0; i < vars.length; i++) {
+          const pair = vars[i].split('=');
+          params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+        }
+        return params;
+      }
+
+      const params = getQueryParams();
+      const paramString = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+
       var userAgent = navigator.userAgent || navigator.vendor || window.opera;
       var isiOS = /iphone|ipad|ipod/i.test(userAgent);
       var isAndroid = /android/i.test(userAgent);
 
       if (isiOS) {
-        // Attempt to open the app using the custom URL scheme
-        window.location = 'yourapp://';
-        // If the app is not installed, redirect to the App Store after a delay
+        // Use Universal Links if configured, else use custom URL scheme
+        window.location = `yourapp://?${paramString}`;
         setTimeout(function() {
           window.location = 'https://apps.apple.com/app/idYOUR_APP_ID';
         }, 2000);
       } else if (isAndroid) {
-        // Attempt to open the app using the intent URL
-        window.location = 'intent://#Intent;scheme=yourapp;package=com.copartner.app;end';
-        // If the app is not installed, redirect to the Play Store after a delay
+        // Use Intent URL with parameters
+        window.location = `intent://?${paramString}#Intent;scheme=yourapp;package=com.copartner.app;end`;
         setTimeout(function() {
           window.location = 'https://play.google.com/store/apps/details?id=com.copartner.app';
         }, 2000);
       } else {
-        // For other devices, redirect to your website
-        window.location = 'https://copartner.in';
+        window.location = 'https://com.copartner.app';
       }
     };
   </script>

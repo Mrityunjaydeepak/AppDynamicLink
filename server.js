@@ -1,8 +1,7 @@
 // server.js
 const express = require('express');
-const path = require('path');
 const app = express();
-const port = process.env.PORT || 6666;
+const port = process.env.PORT || 3000;
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
@@ -12,9 +11,14 @@ app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
-// Route for the dynamic link
+// Route for the dynamic link with parameters
 app.get('/app', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'redirect.html'));
+  // Capture query parameters
+  const params = req.query;
+  const queryString = new URLSearchParams(params).toString();
+
+  // Redirect to redirect.html with query parameters
+  res.redirect(`/redirect.html?${queryString}`);
 });
 
 // Start the server
